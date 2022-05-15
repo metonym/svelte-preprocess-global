@@ -1,0 +1,65 @@
+// Vitest Snapshot v1
+
+exports[`data attributes 1`] = `
+"<style>
+  :global([data-attr]) { color: red; }
+
+  :global([data-attr2] div), data-value { color: blue; }
+</style>
+
+<Component data-attr data-attr2=\\"value\\" />"
+`;
+
+exports[`no styles 1`] = `"<Component id=\\"my-id\\" class=\\"class1 class2\\" />"`;
+
+exports[`readme example 1`] = `
+"<Component id=\\"component\\" data-component class=\\"bg-blue\\" />
+
+<style>
+  :global(#component) {
+    color: red;
+  }
+
+  :global([data-component]) {
+    outline: 1px solid white;
+  }
+
+  :global(.bg-blue) {
+    background: blue;
+  }
+</style>"
+`;
+
+exports[`single id, class 1`] = `
+"<Component id=\\"my-id\\" class=\\"class1 class2\\" />
+
+<style>
+  :global(#my-id) { outline: 1px solid blue; }
+
+  :global(.class1) { color: red; }
+</style>"
+`;
+
+exports[`single id, class 2`] = `
+"<Component id=\\"my-id\\" class=\\"class1 class2\\" />
+
+<style>
+  :global(#my-id) { outline: 1px solid blue; }
+
+  :global(.class1) { color: red; }
+</style>"
+`;
+
+exports[`styles first, multiple selectors 1`] = `
+"<style>
+  :global(.class1), :global(.class2) { color: red; }
+
+  :global(.class2) { outline: 1px solid red; }
+
+  :global(.class2 div), #h1, .not-a-class { color: blue; }
+
+  :global(#my-id > div), #h1, .not-a-class { color: blue; }
+</style>
+
+<Component id=\\"my-id\\" class=\\"class1 class2\\" />"
+`;
