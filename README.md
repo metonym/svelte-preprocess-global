@@ -2,9 +2,9 @@
 
 > Svelte preprocessor that applies the `:global()` directive to id, class, and data attribute selectors passed to Svelte components.
 
-By design, Svelte styles are [component-scoped](https://svelte.dev/docs#component-format-style). The `:global(...)` directive is required to apply a selector globally.
+By design, Svelte styles are [component-scoped](https://svelte.dev/docs#component-format-style). The `:global(...)` directive is required to apply a style globally.
 
-`svelte-preprocess` already supports `<style global>` where every CSS selector is made to apply globally.
+`svelte-preprocess` already supports `<style global>`; however, it will apply the `:global` directive to _all_ selectors in the style block.
 
 Instead of making every selector global, this preprocessor only applies the `:global` directive to ids, classes, and data attributes passed to other Svelte components.
 
@@ -31,7 +31,7 @@ Instead of making every selector global, this preprocessor only applies the `:gl
 **Output**
 
 ```svelte
-<Component id="component" class="bg-blue" />
+<Component id="component" data-component class="bg-blue" />
 
 <style>
   :global(#component) {
@@ -46,6 +46,36 @@ Instead of making every selector global, this preprocessor only applies the `:gl
     color: blue;
   }
 </style>
+```
+
+The preprocessor can also detect `@keyframes` usage:
+
+**Input**
+
+```css
+.animate {
+  animation: fade 1.5s linear infinite;
+}
+
+@keyframes fade {
+  50% {
+    opacity: 0;
+  }
+}
+```
+
+**Output**
+
+```css
+:global(.animate) {
+  animation: fade 1.5s linear infinite;
+}
+
+@keyframes -global-fade {
+  50% {
+    opacity: 0;
+  }
+}
 ```
 
 ## Installation
