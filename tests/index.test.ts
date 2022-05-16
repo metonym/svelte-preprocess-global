@@ -87,3 +87,38 @@ test("readme example", () => {
 </style>`)
   ).toMatchSnapshot();
 });
+
+test("keyframes", () => {
+  expect(
+    preprocess(`<Component class="animate animate-name transition transition-name" />
+
+<style>
+  .animate {
+    animation: fade 1.5s linear infinite;
+  }
+
+  .animate-name {
+    animation-name: fade-out;
+  }
+
+  @keyframes fade {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @-webkit-keyframes fade {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-out {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>`)
+  ).toMatchSnapshot();
+});
+
