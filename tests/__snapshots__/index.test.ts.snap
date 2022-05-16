@@ -10,6 +10,38 @@ exports[`data attributes 1`] = `
 <Component data-attr data-attr2=\\"value\\" />"
 `;
 
+exports[`keyframes 1`] = `
+"<Component class=\\"animate animate-name transition transition-name\\" />
+
+<style>
+  :global(.animate) {
+    animation: fade 1.5s linear infinite;
+  }
+
+  :global(.animate-name) {
+    animation-name: fade-out;
+  }
+
+  @keyframes -global-fade {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @-webkit-keyframes -global-fade {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes -global-fade-out {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>"
+`;
+
 exports[`no styles 1`] = `"<Component id=\\"my-id\\" class=\\"class1 class2\\" />"`;
 
 exports[`readme example 1`] = `

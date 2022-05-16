@@ -10,6 +10,21 @@ interface BaseNode {
   end: number;
 }
 
+interface DeclarationNode extends BaseNode {
+  type: "Declaration";
+  property: string;
+  value: {
+    children: IdentifierNode[];
+  };
+}
+
+interface AtruleNode extends BaseNode {
+  type: "Atrule";
+  prelude: BaseNode & {
+    children: IdentifierNode[];
+  };
+}
+
 interface ClassSelectorNode extends BaseNode {
   type: "ClassSelector";
   children: any[];
@@ -24,15 +39,24 @@ interface SelectorNode extends BaseNode {
   children: ClassSelectorNode[];
 }
 
-interface AttributeSelectorNode extends Omit<BaseNode, "name"> {
-  type: "AttributeSelector";
-  name: {
-    type: "Identifier";
-    name: string;
-  };
+interface IdentifierNode extends BaseNode {
+  type: "Identifier";
+  name: string;
 }
 
-type Node = Element | AttributeSelectorNode | ClassSelectorNode | SelectorNode | IdSelectorNode;
+interface AttributeSelectorNode extends Omit<BaseNode, "name"> {
+  type: "AttributeSelector";
+  name: IdentifierNode;
+}
+
+type Node =
+  | Element
+  | AttributeSelectorNode
+  | ClassSelectorNode
+  | SelectorNode
+  | IdSelectorNode
+  | DeclarationNode
+  | AtruleNode;
 
 type StyleKey = ClassSelectorNode["type"] | IdSelectorNode["type"] | AttributeSelectorNode["type"];
 
@@ -44,6 +68,8 @@ const PREFIX: Record<StyleKey, (selector: string) => string> = {
 
 const useGlobal = (selector: string) => ":global(" + selector + ")";
 
+const GLOBAL_KEYFRAME = "-global-";
+
 export function global(): Pick<PreprocessorGroup, "markup"> {
   return {
     markup({ content, filename }) {
@@ -53,6 +79,7 @@ export function global(): Pick<PreprocessorGroup, "markup"> {
       const ids = new Set();
       const class_names = new Set();
       const data_attributes = new Set();
+      const keyframes = new Set();
 
       const apply_global = ({
         node,
@@ -92,6 +119,13 @@ export function global(): Pick<PreprocessorGroup, "markup"> {
             });
           }
 
+          if (
+            node.type === "Declaration" &&
+            (node.property === "animation" || node.property === "animation-name")
+          ) {
+            keyframes.add(node.value.children[0]?.name);
+          }
+
           if (node.type === "ClassSelector" && class_names.has(node.name)) {
             apply_global({ node, parent, selector: node.name });
           }
@@ -102,6 +136,13 @@ export function global(): Pick<PreprocessorGroup, "markup"> {
 
           if (node.type === "AttributeSelector" && data_attributes.has(node.name.name)) {
             apply_global({ node, parent, selector: node.name.name });
+          }
+
+          if (node.type === "Atrule" && /keyframes/.test(node.name)) {
+            const keyframe = node.prelude.children[0].name;
+            if (keyframes.has(keyframe)) {
+              s.overwrite(node.prelude.start, node.prelude.end, GLOBAL_KEYFRAME + keyframe);
+            }
           }
         },
       });
