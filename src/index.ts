@@ -47,7 +47,7 @@ const useGlobal = (selector: string) => ":global(" + selector + ")";
 export function global(): Pick<PreprocessorGroup, "markup"> {
   return {
     markup({ content, filename }) {
-      if (filename && /node_modules/.test(filename)) return;
+      if (filename && /(node_modules|.svelte-kit)/.test(filename)) return;
 
       const s = new MagicString(content);
       const ids = new Set();
