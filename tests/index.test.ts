@@ -20,10 +20,14 @@ test("single id, class", () => {
   expect(
     preprocess(`<Component id="my-id" class="class1 class2" />
 
+<h1>Hello world</h1>
+
 <style>
   #my-id { outline: 1px solid blue; }
 
   .class1 { color: red; }
+
+  h1 { font-size: 2rem; }
 </style>`)
   ).toMatchSnapshot();
 });

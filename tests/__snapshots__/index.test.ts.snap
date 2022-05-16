@@ -65,10 +65,14 @@ exports[`readme example 1`] = `
 exports[`single id, class 1`] = `
 "<Component id=\\"my-id\\" class=\\"class1 class2\\" />
 
+<h1>Hello world</h1>
+
 <style>
   :global(#my-id) { outline: 1px solid blue; }
 
   :global(.class1) { color: red; }
+
+  h1 { font-size: 2rem; }
 </style>"
 `;
 
