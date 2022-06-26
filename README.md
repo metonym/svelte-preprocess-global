@@ -93,13 +93,12 @@ pnpm i -D svelte-preprocess-global
 
 ## Usage
 
-Add `global` to the list of preprocessors in your svelte config.
+Add `global` to the list of preprocessors in your `svelte.config.js`.
 
 ```js
 // svelte.config.js
 import { global } from "svelte-preprocess-global";
 
-/** @type {import('@sveltejs/kit').Config} */
 const config = {
   preprocess: [global()],
 };
