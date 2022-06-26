@@ -10,7 +10,7 @@ test("API", () => {
   `);
 });
 
-const preprocess = (content: string) => (API.global().markup({ content }) as Processed).code;
+const preprocess = (content: string) => (API.global().markup?.({ content }) as Processed).code;
 
 test("no styles", () => {
   expect(preprocess(`<Component id="my-id" class="class1 class2" />`)).toMatchSnapshot();
