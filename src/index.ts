@@ -1,62 +1,5 @@
 import { parse, walk } from "svelte/compiler";
 import MagicString from "magic-string";
-import type { PreprocessorGroup } from "svelte/types/compiler/preprocess";
-import type { Element } from "svelte/types/compiler/interfaces";
-
-interface BaseNode {
-  type: string;
-  name: string;
-  start: number;
-  end: number;
-}
-
-interface DeclarationNode extends BaseNode {
-  type: "Declaration";
-  property: string;
-  value: {
-    children: IdentifierNode[];
-  };
-}
-
-interface AtruleNode extends BaseNode {
-  type: "Atrule";
-  prelude: BaseNode & {
-    children: IdentifierNode[];
-  };
-}
-
-interface ClassSelectorNode extends BaseNode {
-  type: "ClassSelector";
-  children: any[];
-}
-
-interface IdSelectorNode extends BaseNode {
-  type: "IdSelector";
-}
-
-interface SelectorNode extends BaseNode {
-  type: "Selector";
-  children: ClassSelectorNode[];
-}
-
-interface IdentifierNode extends BaseNode {
-  type: "Identifier";
-  name: string;
-}
-
-interface AttributeSelectorNode extends Omit<BaseNode, "name"> {
-  type: "AttributeSelector";
-  name: IdentifierNode;
-}
-
-type Node =
-  | Element
-  | AttributeSelectorNode
-  | ClassSelectorNode
-  | SelectorNode
-  | IdSelectorNode
-  | DeclarationNode
-  | AtruleNode;
 
 type StyleKey = ClassSelectorNode["type"] | IdSelectorNode["type"] | AttributeSelectorNode["type"];
 
@@ -70,7 +13,7 @@ const useGlobal = (selector: string) => ":global(" + selector + ")";
 
 const GLOBAL_KEYFRAME = "-global-";
 
-export function global(): Pick<PreprocessorGroup, "markup"> {
+export const global: SveltePreprocessor<"markup"> = () => {
   return {
     markup({ content, filename }) {
       if (filename && /(node_modules|.svelte-kit)/.test(filename)) return;
@@ -87,7 +30,7 @@ export function global(): Pick<PreprocessorGroup, "markup"> {
         selector,
       }: {
         node: IdSelectorNode | ClassSelectorNode | AttributeSelectorNode;
-        parent: Node;
+        parent: AstNode;
         selector: string;
       }) => {
         let start = node.start;
@@ -104,7 +47,7 @@ export function global(): Pick<PreprocessorGroup, "markup"> {
       };
 
       walk(parse(content), {
-        enter(node: Node, parent: Node) {
+        enter(node: AstNode, parent: AstNode) {
           if (node.type === "InlineComponent") {
             node.attributes.forEach(({ name, value }) => {
               const raw: string = value[0]?.raw;
@@ -153,4 +96,4 @@ export function global(): Pick<PreprocessorGroup, "markup"> {
       };
     },
   };
-}
+};
