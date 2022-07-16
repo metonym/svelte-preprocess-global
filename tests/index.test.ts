@@ -125,4 +125,3 @@ test("keyframes", () => {
 </style>`)
   ).toMatchSnapshot();
 });
-

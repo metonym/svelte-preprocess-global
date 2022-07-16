@@ -96,4 +96,4 @@ export const global: SveltePreprocessor<"markup"> = () => {
       };
     },
   };
-}
+};
