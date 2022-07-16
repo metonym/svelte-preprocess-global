@@ -1,6 +1,5 @@
 import { parse, walk } from "svelte/compiler";
 import MagicString from "magic-string";
-import type { PreprocessorGroup } from "svelte/types/compiler/preprocess";
 
 type StyleKey = ClassSelectorNode["type"] | IdSelectorNode["type"] | AttributeSelectorNode["type"];
 
@@ -14,7 +13,7 @@ const useGlobal = (selector: string) => ":global(" + selector + ")";
 
 const GLOBAL_KEYFRAME = "-global-";
 
-export function global(): Pick<PreprocessorGroup, "markup"> {
+export const global: SveltePreprocessor<"markup"> = () => {
   return {
     markup({ content, filename }) {
       if (filename && /(node_modules|.svelte-kit)/.test(filename)) return;

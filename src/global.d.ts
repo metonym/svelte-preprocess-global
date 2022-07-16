@@ -1,6 +1,11 @@
 import type { Element } from "svelte/types/compiler/interfaces";
+import type { PreprocessorGroup } from "svelte/types/compiler/preprocess";
 
 declare global {
+  interface SveltePreprocessor<PreprocessorType, Options = any> {
+    (options?: Options): Pick<PreprocessorGroup, PreprocessorType>;
+  }
+
   interface BaseNode {
     type: string;
     name: string;
