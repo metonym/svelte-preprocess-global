@@ -92,7 +92,7 @@ export const global: SveltePreprocessor<"markup"> = () => {
 
       return {
         code: s.toString(),
-        map: s.generateMap({ file: filename, includeContent: true }),
+        map: s.generateMap({ source: filename, includeContent: true }),
       };
     },
   };
